@@ -44,6 +44,9 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
                 Modules.MODULE_3,
                 Modules.MODULE_4
         );
+
+        registerStates();
+        registerTransitions();
     }
 
     private void registerStates() {
@@ -75,16 +78,27 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
         registerStateCommand(State.XShape, new InstantCommand(() ->
             swerveDrive.setModuleStates(X_SHAPE)
         ));
+
+        registerStateCommand(State.Idle, new InstantCommand(() ->
+            swerveDrive.stopModules()
+        ));
     }
 
     private void registerTransitions() {
         addOmniTransition(State.TeleopFieldOriented, () -> swerveDrive.setFieldRelative(true));
         addOmniTransition(State.TeleopBotOriented, () -> swerveDrive.setFieldRelative(false));
+        addOmniTransition(State.XShape);
+        addOmniTransition(State.Idle);
     }
 
     @Override
     protected void determineSelf() {
         setState(State.Idle);
+    }
+
+    @Override
+    protected void onDisable() {
+        requestTransition(State.Idle);
     }
 
     public enum State {
