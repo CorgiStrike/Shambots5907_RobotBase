@@ -1,10 +1,13 @@
 package frc.robot;
 
 import com.ctre.phoenixpro.configs.CurrentLimitsConfigs;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.ShamLib.PIDGains;
 import frc.robot.ShamLib.motors.pro.PIDSVGains;
 import frc.robot.ShamLib.swerve.ModuleInfo;
+import frc.robot.ShamLib.swerve.SwerveSpeedLimits;
 
 import java.util.function.UnaryOperator;
 
@@ -20,8 +23,19 @@ public final class Constants {
         public static final String GYRO_CAN_BUS = "";
         public static final int PIGEON_CAN_ID = 0;
 
-        public static final double MAX_CHASSIS_SPEED = 0.0;
-        public static final double MAX_CHASSIS_ACCELERATION = 0.0;
+        public static final SwerveSpeedLimits MAX_SWERVE_LIMITS = new SwerveSpeedLimits(
+                0.0,
+                0.0,
+                0.0,
+                0.0
+        );
+
+        public static final SwerveModuleState[] X_SHAPE = new SwerveModuleState[] {
+                new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+                new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),
+                new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+                new SwerveModuleState(0, Rotation2d.fromDegrees(-45))
+        };
 
         public static final PIDGains TELEOP_THETA_GAINS = new PIDGains(0, 0, 0);
         public static final PIDGains AUTO_THETA_GAINS = new PIDGains(0, 0, 0);
