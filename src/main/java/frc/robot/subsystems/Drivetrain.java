@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.ShamLib.SMF.StateMachine;
@@ -11,11 +12,11 @@ import java.util.function.DoubleSupplier;
 import static frc.robot.Constants.Drivetrain.*;
 
 public class Drivetrain extends StateMachine<Drivetrain.State> {
-    private SwerveDrive swerveDrive;
+    private final SwerveDrive swerveDrive;
 
-    private DoubleSupplier xSupplier;
-    private DoubleSupplier ySupplier;
-    private DoubleSupplier thetaSupplier;
+    private final DoubleSupplier xSupplier;
+    private final DoubleSupplier ySupplier;
+    private final DoubleSupplier thetaSupplier;
 
     public Drivetrain(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier thetaSupplier) {
         super("Drivetrain", State.Undetermined, State.class);
@@ -79,8 +80,8 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
             swerveDrive.setModuleStates(X_SHAPE)
         ));
 
-        registerStateCommand(State.Idle, new InstantCommand(() ->
-            swerveDrive.stopModules()
+        registerStateCommand(State.Idle, new InstantCommand(
+                swerveDrive::stopModules
         ));
     }
 
@@ -91,6 +92,14 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
         addOmniTransition(State.Idle);
     }
 
+    public void resetGyro() {
+        swerveDrive.resetGyro();
+    }
+
+    public Command resetGyroCommand() {
+        return new InstantCommand(this::resetGyro);
+    }
+
     @Override
     protected void determineSelf() {
         setState(State.Idle);
@@ -99,6 +108,11 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
     @Override
     protected void onDisable() {
         requestTransition(State.Idle);
+    }
+
+    @Override
+    protected void update() {
+        swerveDrive.updateOdometry();
     }
 
     public enum State {
