@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.ShamLib.CommandFlightStick;
@@ -36,6 +35,8 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
   }
 
   private void registerTransitions() {
+    System.out.println("registering transitions");
+
     addOmniTransition(State.Disabled,
             drivetrain.transitionCommand(Drivetrain.State.Idle)
     );
@@ -58,8 +59,14 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
     rightStick.trigger().onTrue(drivetrain.resetGyroCommand());
   }
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+  @Override
+  protected void onAutonomousStart() {
+    requestTransition(State.Autonomous);
+  }
+
+  @Override
+  protected void onTeleopStart() {
+    requestTransition(State.Teleoperated);
   }
 
   @Override

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
@@ -81,7 +82,7 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
         ));
 
         registerStateCommand(State.Idle, new InstantCommand(
-                swerveDrive::stopModules
+            swerveDrive::stopModules
         ));
     }
 
@@ -102,12 +103,17 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
 
     @Override
     protected void determineSelf() {
-        setState(State.Idle);
-    }
-
-    @Override
-    protected void onDisable() {
-        requestTransition(State.Idle);
+        if (DriverStation.isEnabled()) {
+            if (DriverStation.isTeleop()) {
+              setState(State.TeleopFieldOriented);
+            }
+            else {
+              setState(State.Idle);
+            }
+          }
+          else {
+            setState(State.Idle);
+          }
     }
 
     @Override

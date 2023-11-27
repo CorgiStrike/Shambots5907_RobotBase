@@ -7,15 +7,18 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.ShamLib.SMF.SubsystemManager;
+import frc.robot.ShamLib.SMF.SubsystemManagerFactory;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-
-  private RobotContainer m_robotContainer;
+  private RobotContainer robotContainer;
 
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    robotContainer = new RobotContainer();
+
+    SubsystemManagerFactory.getInstance().registerSubsystem(robotContainer);
+    SubsystemManagerFactory.getInstance().disableAllSubsystems();
   }
 
   @Override
@@ -24,7 +27,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    SubsystemManagerFactory.getInstance().disableAllSubsystems();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -34,11 +39,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    SubsystemManagerFactory.getInstance().notifyAutonomousStart();
   }
 
   @Override
@@ -49,9 +50,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    SubsystemManagerFactory.getInstance().notifyTeleopStart();
   }
 
   @Override
