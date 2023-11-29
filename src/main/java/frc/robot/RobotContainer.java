@@ -5,7 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.ShamLib.CommandFlightStick;
 import frc.robot.ShamLib.SMF.StateMachine;
@@ -18,16 +18,19 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
 
   private final Drivetrain drivetrain;
 
-  public RobotContainer() {
+  public RobotContainer(EventLoop checkModulesLoop) {
     super("Robot Container", State.Undetermined, State.class);
 
     drivetrain = new Drivetrain(
             () -> -leftStick.getY(),
             () -> -leftStick.getX(),
-            () -> -rightStick.getY()
+            () -> -rightStick.getX()
     );
 
     addChildSubsystem(drivetrain);
+
+    //Have the drivetrain start checking for misaligned swerve modules
+    drivetrain.registerMisalignedSwerveTriggers(checkModulesLoop);
 
     registerTransitions();
 
@@ -56,7 +59,7 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
     operatorCont.x().onTrue(drivetrain.transitionCommand(Drivetrain.State.XShape));
     operatorCont.y().onTrue(drivetrain.transitionCommand(Drivetrain.State.Idle));
 
-    rightStick.trigger().onTrue(drivetrain.resetGyroCommand());
+    leftStick.topBase().onTrue(drivetrain.resetGyroCommand());
   }
 
   @Override

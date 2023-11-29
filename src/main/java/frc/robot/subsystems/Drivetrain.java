@@ -1,13 +1,18 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.ShamLib.SMF.StateMachine;
 import frc.robot.ShamLib.swerve.DriveCommand;
+import frc.robot.ShamLib.swerve.RealignModuleCommand;
 import frc.robot.ShamLib.swerve.SwerveDrive;
+import frc.robot.ShamLib.swerve.SwerveModule;
 
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 import static frc.robot.Constants.Drivetrain.*;
@@ -34,9 +39,8 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
                 MAX_SWERVE_LIMITS.getMaxAcceleration(),
                 Modules.MAX_TURN_SPEED,
                 Modules.MAX_TURN_ACCELERATION,
-                TELEOP_THETA_GAINS,
                 AUTO_THETA_GAINS,
-                TRANSLATION_GAINS,
+                AUTO_TRANSLATION_GAINS,
                 false, //Set to true for extra telemetry
                 Modules.CAN_BUS,
                 GYRO_CAN_BUS,
@@ -101,6 +105,17 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
         return new InstantCommand(this::resetGyro);
     }
 
+    public void registerMisalignedSwerveTriggers(EventLoop loop) {
+        for(SwerveModule module : swerveDrive.getModules()) {
+            loop.bind(() -> {
+                    if(module.isModuleMisaligned() && !isEnabled()) {
+                        new RealignModuleCommand(module).schedule();
+                    }
+                }
+            );  
+        }    
+    }
+
     @Override
     protected void determineSelf() {
         if (DriverStation.isEnabled()) {
@@ -120,6 +135,21 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
     protected void update() {
         swerveDrive.updateOdometry();
     }
+
+    
+
+    @Override
+    public Map<String, Sendable> additionalSendables() {
+        return Map.of(
+            // "field", drive.getField()
+            "module-1", swerveDrive.getModules().get(0),
+            "module-2", swerveDrive.getModules().get(1),
+            "module-3", swerveDrive.getModules().get(2),
+            "module-4", swerveDrive.getModules().get(3)
+        );
+    }
+
+
 
     public enum State {
         Undetermined,
