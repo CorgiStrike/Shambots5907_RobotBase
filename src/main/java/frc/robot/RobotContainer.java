@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.ShamLib.CommandFlightStick;
+import frc.robot.ShamLib.HID.CommandFlightStick;
 import frc.robot.ShamLib.SMF.StateMachine;
 import frc.robot.subsystems.Drivetrain;
 
@@ -21,15 +21,12 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
   public RobotContainer(EventLoop checkModulesLoop) {
     super("Robot Container", State.Undetermined, State.class);
 
-    drivetrain = new Drivetrain(
-            () -> -leftStick.getY(),
-            () -> -leftStick.getX(),
-            () -> -rightStick.getX()
-    );
+    drivetrain =
+        new Drivetrain(() -> -leftStick.getY(), () -> -leftStick.getX(), () -> -rightStick.getX());
 
     addChildSubsystem(drivetrain);
 
-    //Have the drivetrain start checking for misaligned swerve modules
+    // Have the drivetrain start checking for misaligned swerve modules
     drivetrain.registerMisalignedSwerveTriggers(checkModulesLoop);
 
     registerTransitions();
@@ -40,17 +37,12 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
   private void registerTransitions() {
     System.out.println("registering transitions");
 
-    addOmniTransition(State.Disabled,
-            drivetrain.transitionCommand(Drivetrain.State.Idle)
-    );
+    addOmniTransition(State.Disabled, drivetrain.transitionCommand(Drivetrain.State.Idle));
 
-    addOmniTransition(State.Teleoperated,
-            drivetrain.transitionCommand(Drivetrain.State.TeleopFieldOriented)
-    );
+    addOmniTransition(
+        State.Teleoperated, drivetrain.transitionCommand(Drivetrain.State.TeleopFieldOriented));
 
-    addOmniTransition(State.Autonomous,
-            drivetrain.transitionCommand(Drivetrain.State.Idle)
-    );
+    addOmniTransition(State.Autonomous, drivetrain.transitionCommand(Drivetrain.State.Idle));
   }
 
   private void configureBindings() {
@@ -77,12 +69,10 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
     if (DriverStation.isEnabled()) {
       if (DriverStation.isTeleop()) {
         setState(State.Teleoperated);
-      }
-      else {
+      } else {
         setState(State.Autonomous);
       }
-    }
-    else {
+    } else {
       setState(State.Disabled);
     }
   }

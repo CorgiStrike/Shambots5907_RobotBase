@@ -1,29 +1,56 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.ShamLib.SMF.SubsystemManagerFactory;
+import frc.robot.ShamLib.ShamLibConstants.BuildMode;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
 
   private final EventLoop checkModulesLoop = new EventLoop();
 
+  private int currentLoops = 0;
+
   @Override
   public void robotInit() {
+
+    if (isReal()) Constants.currentBuildMode = BuildMode.REAL;
+
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        Logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        Logger.recordMetadata("GitDirty", "Unknown");
+        break;
+    }
+
     robotContainer = new RobotContainer(checkModulesLoop);
 
     SubsystemManagerFactory.getInstance().registerSubsystem(robotContainer);
     SubsystemManagerFactory.getInstance().disableAllSubsystems();
-
-    //Update the event loop for misaligned modules once every 10 seconds
-    addPeriodic(checkModulesLoop::poll, 10);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
+    // check the modules loop ~ once every 10 seconds
+    if (currentLoops++ > 500) {
+      checkModulesLoop.poll();
+    }
   }
 
   @Override
