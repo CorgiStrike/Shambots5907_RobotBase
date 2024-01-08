@@ -1,3 +1,7 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
 import edu.wpi.first.wpilibj.event.EventLoop;
@@ -10,12 +14,12 @@ import org.littletonrobotics.junction.Logger;
 public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
 
-  private final EventLoop checkModulesLoop = new EventLoop();
-
   private int currentLoops = 0;
+  private final EventLoop checkModulesLoop = new EventLoop();
 
   @Override
   public void robotInit() {
+    robotContainer = new RobotContainer(checkModulesLoop);
 
     if (isReal()) Constants.currentBuildMode = BuildMode.REAL;
 
@@ -49,6 +53,7 @@ public class Robot extends LoggedRobot {
 
     // check the modules loop ~ once every 10 seconds
     if (currentLoops++ > 500) {
+      currentLoops = 0;
       checkModulesLoop.poll();
     }
   }

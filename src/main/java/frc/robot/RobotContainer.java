@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.ShamLib.HID.CommandFlightStick;
 import frc.robot.ShamLib.SMF.StateMachine;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.PrototypeShooter.PrototypeShooter;
+import frc.robot.subsystems.PrototypeShooter.PrototypeShooterIOReal;
 
 public class RobotContainer extends StateMachine<RobotContainer.State> {
   private final CommandFlightStick leftStick = new CommandFlightStick(0);
@@ -17,6 +19,7 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
   private final CommandXboxController operatorCont = new CommandXboxController(2);
 
   private final Drivetrain drivetrain;
+  private final PrototypeShooter shooter;
 
   public RobotContainer(EventLoop checkModulesLoop) {
     super("Robot Container", State.Undetermined, State.class);
@@ -28,6 +31,17 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
 
     // Have the drivetrain start checking for misaligned swerve modules
     drivetrain.registerMisalignedSwerveTriggers(checkModulesLoop);
+
+    shooter =
+        new PrototypeShooter(
+            new PrototypeShooterIOReal(
+                Constants.PROTOTYPE_SHOOTER.FLYWHEEL_CAN_ID,
+                Constants.PROTOTYPE_SHOOTER.INVERT_FLYWHEEL,
+                Constants.PROTOTYPE_SHOOTER.MAX_VELOCITY,
+                Constants.PROTOTYPE_SHOOTER.VELOCITY_GAINS,
+                Constants.CURRENT_LIMITS_CONFIGS),
+            operatorCont.rightBumper(),
+            () -> operatorCont.leftBumper().getAsBoolean());
 
     registerTransitions();
 
@@ -50,6 +64,8 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
     operatorCont.b().onTrue(drivetrain.transitionCommand(Drivetrain.State.TeleopBotOriented));
     operatorCont.x().onTrue(drivetrain.transitionCommand(Drivetrain.State.XShape));
     operatorCont.y().onTrue(drivetrain.transitionCommand(Drivetrain.State.Idle));
+
+    operatorCont.povUp().onTrue(shooter.transitionCommand(PrototypeShooter.State.IDLE));
 
     leftStick.topBase().onTrue(drivetrain.resetGyroCommand());
   }
