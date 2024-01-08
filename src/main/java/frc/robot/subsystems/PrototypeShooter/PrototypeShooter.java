@@ -1,13 +1,12 @@
 package frc.robot.subsystems.PrototypeShooter;
 
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.ShamLib.SMF.StateMachine;
-import java.util.Map;
 import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -30,6 +29,8 @@ public class PrototypeShooter extends StateMachine<PrototypeShooter.State> {
 
     registerStateCommands(tuningIncremnetTrigger, tuningInterruptSupplier);
     registerTransitions();
+
+    putCommands();
   }
 
   private double getVelocityTarget() {
@@ -116,6 +117,14 @@ public class PrototypeShooter extends StateMachine<PrototypeShooter.State> {
     addCommutativeTransition(State.IDLE, State.VOLTAGE_CONTROL, new InstantCommand());
   }
 
+  private void putCommands() {
+    SmartDashboard.putData("Switch to Voltage Control", transitionCommand(State.VOLTAGE_CONTROL));
+    SmartDashboard.putData("Switch to Velocity Control", transitionCommand(State.VELOCITY_CONTROL));
+    SmartDashboard.putData("Switch to KS Calc", transitionCommand(State.CALCULATE_KS));
+    SmartDashboard.putData("Switch to KV Calc", transitionCommand(State.CALCULATE_KV));
+    SmartDashboard.putData("Switch to Idle", transitionCommand(State.IDLE));
+  }
+
   @Override
   protected void determineSelf() {
     setState(State.IDLE);
@@ -133,7 +142,7 @@ public class PrototypeShooter extends StateMachine<PrototypeShooter.State> {
     builder.addDoubleProperty("Voltage Target", this::getVoltageTarget, this::setVoltageTarget);
   }
 
-  @Override
+  /*@Override
   public Map<String, Sendable> additionalSendables() {
     return Map.of(
         "Switch to Voltage Control", transitionCommand(State.VOLTAGE_CONTROL),
@@ -141,7 +150,7 @@ public class PrototypeShooter extends StateMachine<PrototypeShooter.State> {
         "Switch to KS Calc", transitionCommand(State.CALCULATE_KS),
         "Switch to KV Calc", transitionCommand(State.CALCULATE_KV),
         "Switch to Idle", transitionCommand(State.IDLE));
-  }
+  }*/
 
   public enum State {
     UNDETERMINED,

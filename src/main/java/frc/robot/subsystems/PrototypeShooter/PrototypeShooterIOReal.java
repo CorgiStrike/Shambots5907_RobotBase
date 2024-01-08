@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.ShamLib.motors.talonfx.PIDSVGains;
 import frc.robot.ShamLib.motors.talonfx.VelocityTalonFX;
@@ -63,6 +64,7 @@ public class PrototypeShooterIOReal implements PrototypeShooterIO {
   @Override
   public Command calculateKS(Trigger increment, BooleanSupplier interrupt) {
     AtomicInteger currentMultiple = new AtomicInteger(0);
+    increment.onTrue(new InstantCommand(currentMultiple::incrementAndGet));
 
     return new FunctionalCommand(
         () -> {
