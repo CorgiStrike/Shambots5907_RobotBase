@@ -27,11 +27,6 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
     drivetrain =
         new Drivetrain(() -> -leftStick.getY(), () -> -leftStick.getX(), () -> -rightStick.getX());
 
-    addChildSubsystem(drivetrain);
-
-    // Have the drivetrain start checking for misaligned swerve modules
-    drivetrain.registerMisalignedSwerveTriggers(checkModulesLoop);
-
     shooter =
         new PrototypeShooter(
             new PrototypeShooterIOReal(
@@ -42,6 +37,12 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
                 Constants.CURRENT_LIMITS_CONFIGS),
             operatorCont.rightBumper(),
             () -> operatorCont.leftBumper().getAsBoolean());
+
+    addChildSubsystem(shooter);
+    addChildSubsystem(drivetrain);
+
+    // Have the drivetrain start checking for misaligned swerve modules
+    drivetrain.registerMisalignedSwerveTriggers(checkModulesLoop);
 
     registerTransitions();
 
