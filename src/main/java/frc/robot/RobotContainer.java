@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.ShamLib.HID.CommandFlightStick;
 import frc.robot.ShamLib.SMF.StateMachine;
@@ -22,7 +23,10 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
     super("Robot Container", State.Undetermined, State.class);
 
     drivetrain =
-        new Drivetrain(() -> -leftStick.getY(), () -> -leftStick.getX(), () -> -rightStick.getX());
+        new Drivetrain(
+            () -> -operatorCont.getLeftY(),
+            () -> -operatorCont.getLeftX(),
+            () -> -operatorCont.getLeftX());
 
     addChildSubsystem(drivetrain);
 

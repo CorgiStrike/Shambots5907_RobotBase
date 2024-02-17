@@ -91,9 +91,9 @@ public final class Constants {
           ModuleInfo.generateModuleInfo(
               MODULE_TYPE,
               SPEED_LEVEL,
-              0,
-              0,
-              0,
+              1,
+              2,
+              1,
               0,
               new Translation2d(WHEEL_X_OFFSET, WHEEL_Y_OFFSET),
               false);
@@ -103,9 +103,9 @@ public final class Constants {
           ModuleInfo.generateModuleInfo(
               MODULE_TYPE,
               SPEED_LEVEL,
-              0,
-              0,
-              0,
+              3,
+              4,
+              3,
               0,
               new Translation2d(-WHEEL_X_OFFSET, WHEEL_Y_OFFSET),
               false);
@@ -115,9 +115,9 @@ public final class Constants {
           ModuleInfo.generateModuleInfo(
               MODULE_TYPE,
               SPEED_LEVEL,
-              0,
-              0,
-              0,
+              5,
+              6,
+              5,
               0,
               new Translation2d(-WHEEL_X_OFFSET, -WHEEL_Y_OFFSET),
               true);
@@ -127,9 +127,9 @@ public final class Constants {
           ModuleInfo.generateModuleInfo(
               MODULE_TYPE,
               SPEED_LEVEL,
-              0,
-              0,
-              0,
+              7,
+              8,
+              7,
               0,
               new Translation2d(WHEEL_X_OFFSET, -WHEEL_Y_OFFSET),
               true);
