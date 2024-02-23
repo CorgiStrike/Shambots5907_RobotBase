@@ -34,16 +34,16 @@ public final class Constants {
 
     // TODO: SET TRACK WIDTH AND WHEEL_BASE
     // Distance between centers of right and left wheels on robot in meters
-    public static final double TRACK_WIDTH = Units.inchesToMeters(0);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(24);
     // Distance between front and back wheels on robot in meters
-    public static final double WHEEL_BASE = Units.inchesToMeters(0);
+    public static final double WHEEL_BASE = Units.inchesToMeters(24);
 
     public static final double rotationRadius =
         Math.sqrt(Math.pow(TRACK_WIDTH / 2.0, 2) + Math.pow(WHEEL_BASE / 2.0, 2)) * 2 * Math.PI;
 
     // Standard speeds (MK4 L3 modules capable of 5.27 m/s)
-    public static final double LINEAR_SPEED = 5.27;
-    public static final double LINEAR_ACCELERATION = 10;
+    public static final double LINEAR_SPEED = 3.0; // 5.27;
+    public static final double LINEAR_ACCELERATION = 5; // 10;
     public static final double ROTARY_SPEED = (LINEAR_SPEED / rotationRadius) * (2 * Math.PI);
     public static final double ROTARY_ACCELERATION = ROTARY_SPEED * 3;
 
@@ -78,9 +78,9 @@ public final class Constants {
 
       // TODO: CALCULATE TURN AND DRIVE GAINS
       // TODO: DOCUMENTATION FOR FALCON AND SWERVE TUNING PROCESS
-      public static final PIDSVGains DRIVE_GAINS = new PIDSVGains(0, 0, 0, 0, 0);
+      public static final PIDSVGains DRIVE_GAINS = new PIDSVGains(0.25, 0, 0, 0.3, 0.1135);
 
-      public static final PIDSVGains TURN_GAINS = new PIDSVGains(0, 0, 0, 0, 0);
+      public static final PIDSVGains TURN_GAINS = new PIDSVGains(10, 0, 0, 0.3, 0.121057);
 
       // TODO: FILL IN MODULE CAN AND ENCODER OFFSET INFO
       // TODO: You may have to change whether the drive motors are inverted or not. The existing
@@ -94,7 +94,7 @@ public final class Constants {
               1,
               2,
               1,
-              0,
+              -25.752,
               new Translation2d(WHEEL_X_OFFSET, WHEEL_Y_OFFSET),
               false);
 
@@ -106,7 +106,7 @@ public final class Constants {
               3,
               4,
               3,
-              0,
+              -165.1,
               new Translation2d(-WHEEL_X_OFFSET, WHEEL_Y_OFFSET),
               false);
 
@@ -118,7 +118,7 @@ public final class Constants {
               5,
               6,
               5,
-              0,
+              75.6,
               new Translation2d(-WHEEL_X_OFFSET, -WHEEL_Y_OFFSET),
               true);
 
@@ -130,7 +130,7 @@ public final class Constants {
               7,
               8,
               7,
-              0,
+              -84.9,
               new Translation2d(WHEEL_X_OFFSET, -WHEEL_Y_OFFSET),
               true);
     }

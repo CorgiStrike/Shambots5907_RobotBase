@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.ShamLib.HID.CommandFlightStick;
 import frc.robot.ShamLib.SMF.StateMachine;
@@ -26,7 +25,7 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
         new Drivetrain(
             () -> -operatorCont.getLeftY(),
             () -> -operatorCont.getLeftX(),
-            () -> -operatorCont.getLeftX());
+            () -> -operatorCont.getRightX());
 
     addChildSubsystem(drivetrain);
 
@@ -55,7 +54,8 @@ public class RobotContainer extends StateMachine<RobotContainer.State> {
     operatorCont.x().onTrue(drivetrain.transitionCommand(Drivetrain.State.XShape));
     operatorCont.y().onTrue(drivetrain.transitionCommand(Drivetrain.State.Idle));
 
-    leftStick.topBase().onTrue(drivetrain.resetGyroCommand());
+    // leftStick.topBase().onTrue(drivetrain.resetGyroCommand());
+    operatorCont.start().onTrue(drivetrain.resetGyroCommand());
   }
 
   @Override
