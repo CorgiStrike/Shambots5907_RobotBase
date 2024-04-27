@@ -55,6 +55,10 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
             GYRO_CAN_BUS,
             Constants.CURRENT_LIMITS_CONFIGS,
             this,
+            false,
+            () -> false,
+            Constants.Drivetrain.STATE_STD_DEVIATIONS,
+            Constants.LOOP_PERIOD,
             Modules.MODULE_1,
             Modules.MODULE_2,
             Modules.MODULE_3,
@@ -74,7 +78,6 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
             thetaSupplier,
             Constants.Controller.DEADBAND,
             Constants.Controller.CONVERTER,
-            true,
             this,
             MAX_SWERVE_LIMITS));
 
@@ -87,7 +90,6 @@ public class Drivetrain extends StateMachine<Drivetrain.State> {
             thetaSupplier,
             Constants.Controller.DEADBAND,
             Constants.Controller.CONVERTER,
-            true,
             this,
             MAX_SWERVE_LIMITS));
 

@@ -1,9 +1,13 @@
 package frc.robot;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.ShamLib.PIDGains;
 import frc.robot.ShamLib.ShamLibConstants.BuildMode;
@@ -16,7 +20,8 @@ import java.util.function.UnaryOperator;
 
 public final class Constants {
 
-  public static final double loopPeriodSecs = 0.02;
+  public static final double LOOP_PERIOD = 0.02;
+
   public static BuildMode currentBuildMode = BuildMode.REAL;
 
   public static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs();
@@ -49,6 +54,8 @@ public final class Constants {
 
     public static final SwerveSpeedLimits MAX_SWERVE_LIMITS =
         new SwerveSpeedLimits(LINEAR_SPEED, LINEAR_ACCELERATION, ROTARY_SPEED, ROTARY_ACCELERATION);
+
+    public static final Matrix<N3, N1> STATE_STD_DEVIATIONS = VecBuilder.fill(0.003, 0.003, 0.0002);
 
     public static final SwerveModuleState[] X_SHAPE =
         new SwerveModuleState[] {
@@ -96,7 +103,9 @@ public final class Constants {
               0,
               0,
               new Translation2d(WHEEL_X_OFFSET, WHEEL_Y_OFFSET),
-              false);
+              false,
+              true,
+              true);
 
       // back left
       public static final ModuleInfo MODULE_2 =
@@ -108,7 +117,9 @@ public final class Constants {
               0,
               0,
               new Translation2d(-WHEEL_X_OFFSET, WHEEL_Y_OFFSET),
-              false);
+              false,
+              true,
+              true);
 
       // back right
       public static final ModuleInfo MODULE_3 =
@@ -120,6 +131,8 @@ public final class Constants {
               0,
               0,
               new Translation2d(-WHEEL_X_OFFSET, -WHEEL_Y_OFFSET),
+              true,
+              true,
               true);
 
       // front right
@@ -132,6 +145,8 @@ public final class Constants {
               0,
               0,
               new Translation2d(WHEEL_X_OFFSET, -WHEEL_Y_OFFSET),
+              true,
+              true,
               true);
     }
   }
