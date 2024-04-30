@@ -27,6 +27,7 @@ import frc.robot.ShamLib.Candle.RGB;
 import frc.robot.ShamLib.PIDGains;
 import frc.robot.ShamLib.ShamLibConstants.BuildMode;
 import frc.robot.ShamLib.motors.talonfx.PIDSVGains;
+import frc.robot.ShamLib.motors.tuning.LoggedTunablePIDSV;
 import frc.robot.ShamLib.swerve.SwerveSpeedLimits;
 import frc.robot.ShamLib.swerve.module.ModuleInfo;
 import frc.robot.ShamLib.swerve.module.ModuleInfo.SwerveModuleSpeedLevel;
@@ -34,10 +35,12 @@ import frc.robot.ShamLib.swerve.module.ModuleInfo.SwerveModuleType;
 import frc.robot.ShamLib.swerve.odometry.OdometryBoundingBox;
 import frc.robot.subsystems.vision.Vision.CamSettings;
 import java.util.function.UnaryOperator;
+import frc.robot.ShamLib.motors.tuning.LoggedTunablePIDSV;
 
 public final class Constants {
 
   public static final double LOOP_PERIOD = 0.02;
+  private static final boolean ALLOW_TUNING = true;
 
   public static BuildMode currentBuildMode = BuildMode.REAL;
 
@@ -235,6 +238,43 @@ public final class Constants {
           new CamSettings(Hardware.EXAMPLE_CAM_POSE, EXAMPLE_CAM_TRUST_CUTOFF, 0.4, 2.0, 0.33, 1.0);
     }
   }
+
+  public static final class Elevator{
+    public static final class Hardware{
+      public static final int LEFT_ELEVATOR_ID = 2;
+      public static final int RIGHT_ELEVATOR_ID = 1;
+
+      public static final boolean LEFT_INVERTED = false;
+      public static final boolean RIGHT_INVERTED = true;
+
+      
+    }
+
+    public static final class Settings{
+      
+      public static final double ELEVATOR_VELOCITY = 4000;
+      public static final double ELEVATOR_ACCELERATION = 1200;
+      public static final double ELEVATOR_JERK = 500;
+
+      public static final double ELEVATOR_RATIO = (1/6);
+
+      public static final double ELEVATOR_FX_POSITION = 0;
+
+      public static final double ELEVATOR_ROTOR_VELOCITY = 0;
+      public static final double ELEVATOR_FOLLOWER_POSITION = 0;
+      public static final double ELEVATOR_FOLLOWER_VELOCITY = 0;
+      public static final double ELEVATOR_TARGET = 0;
+      public static final double ELEVATOR_ENCODER_POSITION = 0;
+      public static final double ELEVATOR_HEIGHT = 0;
+      
+
+      public static final LoggedTunablePIDSV GAINS =
+          new LoggedTunablePIDSV(
+              "Climber Loaded Gains", new PIDSVGains(.5, 0, 0, 0.0138, 0.1225), () -> ALLOW_TUNING);
+
+    }
+  }
+
 
   public static final class Lights {
     public static final class Hardware {

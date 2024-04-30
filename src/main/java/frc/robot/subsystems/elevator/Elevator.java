@@ -1,13 +1,13 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.ShamLib.SMF.StateMachine;
 
-public class Arm extends StateMachine<Arm.State> {
+public class Elevator extends StateMachine<Elevator.State> {
 
-  public Arm() {
-    super("Arm", State.UNDETERMINED, State.class);
+  public Elevator() {
+    super("Elevator", State.UNDETERMINED, State.class);
 
     registerStateCommand(State.IDLE, new PrintCommand("eat my shorts"));
 
